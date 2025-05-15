@@ -8,7 +8,20 @@ const questions = [
   "I experience muscle tension.",
   "I have trouble sleeping due to anxiety.",
   "I feel afraid as if something awful might happen.",
-  "I avoid situations that make me anxious."
+  "I avoid situations that make me anxious.",
+  // Situational / engaging style below:
+  "Before a social event, I overthink everything that might go wrong.",
+  "When I get a random call, I assume it's bad news.",
+  "I replay awkward conversations in my head for hours.",
+  "In public spaces, I worry that people are watching me.",
+  "If plans change last minute, I get thrown off emotionally.",
+  "I often need reassurance that everything is okay.",
+  "When I wake up, I feel a tight chest or unease without knowing why.",
+  "I check things repeatedly (like messages or doors) because of nervousness.",
+  "I feel anxious when I can’t respond to a message right away.",
+  "Unexpected responsibilities make me panic inside.",
+  "Even fun things feel stressful if I have too much going on."
+  
 ];
 
 const options = [
