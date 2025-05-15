@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Anxiety Self-Assessment</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
     <h1>Anxiety Self-Assessment</h1>
-    <form id="anxiety-form">
-      <div id="questions-container"></div>
-      <button type="submit">Submit</button>
+    <form id="anxiety-form" class="card">
+      <div id="question-container"></div>
+      <div class="navigation-buttons">
+        <button type="button" id="prevBtn" disabled>← Back</button>
+        <button type="button" id="nextBtn" disabled>Next →</button>
+      </div>
     </form>
-    <div id="result" class="hidden"></div>
+    <div id="result" class="card hidden"></div>
   </div>
   <script src="script.js"></script>
 </body>
