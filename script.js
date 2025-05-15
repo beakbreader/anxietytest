@@ -18,69 +18,89 @@ const options = [
   { text: "Nearly every day", value: 3 }
 ];
 
-const questionsContainer = document.getElementById('questions-container');
-const form = document.getElementById('anxiety-form');
-const resultDiv = document.getElementById('result');
+let currentIndex = 0;
+const answers = new Array(questions.length).fill(null);
 
-// Generate questions
-questions.forEach((question, index) => {
-  const questionDiv = document.createElement('div');
-  questionDiv.classList.add('question');
-  
-  const questionText = document.createElement('p');
-  questionText.textContent = `${index + 1}. ${question}`;
-  questionDiv.appendChild(questionText);
-  
-  const optionsDiv = document.createElement('div');
-  optionsDiv.classList.add('options');
-  
+const questionContainer = document.getElementById("question-container");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const resultDiv = document.getElementById("result");
+
+function showQuestion(index) {
+  questionContainer.innerHTML = "";
+
+  const questionText = document.createElement("p");
+  questionText.textContent = `${index + 1}. ${questions[index]}`;
+  questionContainer.appendChild(questionText);
+
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+
   options.forEach(option => {
-    const label = document.createElement('label');
-    const input = document.createElement('input');
-    input.type = 'radio';
-    input.name = `question${index}`;
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "question";
     input.value = option.value;
+    input.checked = answers[index] === option.value;
+    input.addEventListener("change", () => {
+      answers[index] = parseInt(input.value);
+      nextBtn.disabled = false;
+    });
     label.appendChild(input);
-    label.appendChild(document.createTextNode(` ${option.text}`));
+    label.append(` ${option.text}`);
     optionsDiv.appendChild(label);
   });
-  
-  questionDiv.appendChild(optionsDiv);
-  questionsContainer.appendChild(questionDiv);
+
+  questionContainer.appendChild(optionsDiv);
+
+  prevBtn.disabled = index === 0;
+  nextBtn.disabled = answers[index] === null;
+  nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next →";
+}
+
+prevBtn.addEventListener("click", () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showQuestion(currentIndex);
+  }
 });
 
-// Handle form submission
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-  
-  let totalScore = 0;
-  let allAnswered = true;
-  
-  questions.forEach((_, index) => {
-    const selected = document.querySelector(`input[name="question${index}"]:checked`);
-    if (selected) {
-      totalScore += parseInt(selected.value);
-    } else {
-      allAnswered = false;
-    }
-  });
-  
-  if (!allAnswered) {
-    alert("Please answer all questions before submitting.");
-    return;
-  }
-  
-  let feedback = "";
-  if (totalScore <= 4) {
-    feedback = "Minimal anxiety.";
-  } else if (totalScore <= 9) {
-    feedback = "Mild anxiety.";
-  } else if (totalScore <= 14) {
-    feedback = "Moderate anxiety.";
+nextBtn.addEventListener("click", () => {
+  if (currentIndex < questions.length - 1) {
+    currentIndex++;
+    showQuestion(currentIndex);
   } else {
-    feedback = "Severe anxiety.";
+    showResults();
   }
-  
-  resultDiv.textContent = `Your total score is ${totalScore}. ${feedback}`;
-  resultDiv.classList.remove('hidden');
 });
+
+function showResults() {
+  const score = answers.reduce((sum, val) => sum + val, 0);
+  let feedback = "", likelihood = "";
+
+  if (score <= 4) {
+    feedback = "Minimal anxiety";
+    likelihood = "Very unlikely";
+  } else if (score <= 9) {
+    feedback = "Mild anxiety";
+    likelihood = "Somewhat unlikely";
+  } else if (score <= 14) {
+    feedback = "Moderate anxiety";
+    likelihood = "Somewhat likely";
+  } else {
+    feedback = "Severe anxiety";
+    likelihood = "Very likely";
+  }
+
+  document.getElementById("anxiety-form").classList.add("hidden");
+  resultDiv.classList.remove("hidden");
+  resultDiv.innerHTML = `
+    <h2>Assessment Results</h2>
+    <p>Your total score is <strong>${score}</strong></p>
+    <p><strong>${feedback}</strong></p>
+    <p>Probability of having anxiety: <strong>${likelihood}</strong></p>
+  `;
+}
+
+showQuestion(currentIndex);
